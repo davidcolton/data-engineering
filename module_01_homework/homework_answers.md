@@ -181,13 +181,13 @@ Consider only `lpep_pickup_datetime` when filtering by date.
 select "Zone"
 from   public.zone_data
 where  "LocationID" in (
-	select		"PULocationID"
-	from			green_taxi_data
-	where			DATE(lpep_pickup_datetime) = '2019-10-18'
-	group by	"PULocationID"
-	having 		sum(total_amount) > 13000
-	order by 	1 desc
-	limit 		3
+	select   "PULocationID"
+	from     green_taxi_data
+	where    DATE(lpep_pickup_datetime) = '2019-10-18'
+	group by "PULocationID"
+	having   sum(total_amount) > 13000
+	order by 1 desc
+	limit    3
 )
 ```
 
@@ -215,16 +215,15 @@ Drop Off Zone: `"JFK Airport"`
 Tip Amount: `87.3`
 
 ```sql
-select 		zdd."Zone", tip_amount
-from			public.green_taxi_data as gtd
-join			public.zone_data as zdp
-on				gtd."PULocationID" = zdp."LocationID"
-join			public.zone_data as zdd
-on				gtd."DOLocationID" = zdd."LocationID"
-where			DATE(lpep_pickup_datetime) >= '2019-10-01'
-and				DATE(lpep_pickup_datetime) <= '2019-10-31'
-and				zdp."Zone" = 'East Harlem North'
-order by	2 desc
+select zdd."Zone",
+    tip_amount
+from public.green_taxi_data as gtd
+    join public.zone_data as zdp on gtd."PULocationID" = zdp."LocationID"
+    join public.zone_data as zdd on gtd."DOLocationID" = zdd."LocationID"
+where DATE(lpep_pickup_datetime) >= '2019-10-01'
+    and DATE(lpep_pickup_datetime) <= '2019-10-31'
+    and zdp."Zone" = 'East Harlem North'
+order by 2 desc
 limit 1;
 ```
 
