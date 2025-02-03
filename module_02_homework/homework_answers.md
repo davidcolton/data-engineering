@@ -105,10 +105,16 @@ How would you configure the timezone to New York in a Schedule trigger?
 Add a `timezone` property set to `America/New_York` in the `Schedule` trigger configuration
 
 ```yaml
+id: my_scheduled_flow
+namespace: my_namespace
+tasks:
+  - id: my_task
+    type: io.kestra.core.tasks.log.Log
+    message: Hello World!
 triggers:
-  - id: zoomcamp_schedule
-    type: io.kestra.plugin.core.trigger.Schedule
-    cron: "0 0 * * *" # Example: Run daily at midnight 
-    timezone: "America/New_York"
+  - id: my_schedule
+    type: io.kestra.core.models.triggers.types.Schedule
+    cron: "0 0 * * *"            # Example cron expression (runs daily at midnight)
+    timezone: "America/New_York" # Explicitly sets the timezone to New York
 ```
 
