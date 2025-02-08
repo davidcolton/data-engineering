@@ -118,7 +118,7 @@ What is the best strategy to make an optimized table in Big Query if your query 
 
 ## Answer 5:
 
-Partition by tpep_dropoff_timedate and Cluster on VendorID
+Partition by tpep_dropoff_datetime and Cluster on VendorID
 
 > ### When to Use Partitioning & Clustering Together?
 >
@@ -185,3 +185,72 @@ Where is the data stored in the External Table you created?
 ## Answer 7:
 
 `GCP Bucket`
+
+
+
+## Question 8:
+
+It is best practice in Big Query to always cluster your data:
+
+- True
+- False
+
+## Answer 8:
+
+`False`
+
+> While clustering is often beneficial in BigQuery, it's not a *universal* best practice to *always* cluster your data.  There are situations where clustering might not be the best approach or might even be detrimental.
+>
+> Here's a more nuanced view:
+>
+> **When Clustering is Highly Recommended:**
+>
+> - **Large Tables:** Clustering is most effective on large tables (terabytes in size and above).  The performance gains are more significant as the table size increases.
+>
+> - Frequently Filtered/Aggregated Data:
+>
+>    If you frequently filter or aggregate your data based on specific columns, clustering on those columns can drastically improve query performance.
+>
+>   BigQuery can prune partitions and blocks more efficiently, reducing the amount of data scanned.
+>
+> - Data Warehousing/Analytics:
+>
+>    In data warehousing and analytical workloads where you're often querying large datasets with filters, clustering is usually a very good idea.
+>
+> **When Clustering Might Not Be Necessary or Advisable:**
+>
+> - **Small Tables:** For very small tables (gigabytes or smaller), the overhead of clustering might outweigh the benefits.  BigQuery is already very fast at querying small tables.
+>
+> - **Infrequently Queried Tables:** If a table is rarely queried, clustering might not be worth the cost (there is a small cost associated with clustering).
+>
+> - **Tables with Random Access Patterns:** If your queries access data randomly across the table and don't involve filtering on specific columns, clustering might not provide much benefit.
+>
+> - Write-Heavy Workloads:
+>
+>     Clustering can slightly increase the cost of data ingestion because BigQuery needs to maintain the clustered order.
+>
+>    If you have a very write-heavy workload and read performance is less of a concern, you might consider skipping clustering.
+>
+> - **Data that is already naturally clustered:** Sometimes data arrives in a way that it is already naturally clustered by time or another column. In these cases, clustering might just add overhead with no actual performance gain.
+>
+> **Best Practices for Clustering:**
+>
+> - **Choose the Right Clustering Columns:** Select the columns that are most frequently used in `WHERE` clauses, `JOIN` conditions, or `GROUP BY` clauses.  These are the columns that will provide the most benefit from clustering.
+>
+> - Consider Multiple Clustering Columns:
+>
+>    You can cluster on multiple columns (up to four).  The order of the columns matters.
+>
+>     The first column is the primary clustering key, the second is the secondary, and so on.
+>
+> - **Test and Monitor:**  It's always a good idea to test the performance of your queries with and without clustering to see the actual impact.  Monitor query performance over time and adjust your clustering strategy if needed.
+>
+> - Partitioning and Clustering:
+>
+>   Clustering works very well in conjunction with partitioning.
+>
+>     Partitioning divides the table into smaller, manageable chunks, and clustering further optimizes the data within each partition. This is often an excellent strategy for large tables.
+>
+> **In Summary:**
+>
+> Clustering is a powerful technique for optimizing query performance in BigQuery, especially for large, frequently queried tables. However, it's not a "one-size-fits-all" solution.  Consider your specific workload, table size, and query patterns to determine if clustering is the right choice.  When in doubt, test and monitor!
